@@ -10,7 +10,8 @@ class JokeList extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]")
+			jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]"),
+			loading: false,
 		}
 	}
 
@@ -28,7 +29,8 @@ class JokeList extends Component {
 			jokes.push({id: json.id, text: json.joke, votes: 0});
 		}
 		this.setState(st => ({
-			jokes: [...st.jokes, ...jokes]
+			jokes: [...st.jokes, ...jokes],
+			loading: false
 		}),
 		() => window.localStorage.setItem("jokes", JSON.stringify(this.state.jokes))
 		)
@@ -43,7 +45,8 @@ class JokeList extends Component {
 	}
 
 	handleClick = () => {
-		this.getJokes()
+		this.setState({loading: true}, this.getJokes)
+		//this.getJokes()
 	}
 
 	render() {
@@ -55,14 +58,18 @@ class JokeList extends Component {
 					<button className="JokeList-getmore" onClick={this.handleClick}>New jokes</button>
 				</div>
 				<div className="JokeList-jokes">
-					{this.state.jokes.map(joke => 
-						<Joke 
-							id={joke.id}
-							key={joke.id}
-							text={joke.text}
-							votes={joke.votes}
-							handleVote={this.handleVote}
-						/>)}
+					{!this.state.loading ? 
+						this.state.jokes.map(joke => 
+							<Joke 
+								id={joke.id}
+								key={joke.id}
+								text={joke.text}
+								votes={joke.votes}
+								handleVote={this.handleVote}
+							/>)
+						: 
+						<h1 style={{width: "fit-content", margin: "10px auto"}}>Loading...</h1>
+					}
 				</div>
 			</div>
 		);
