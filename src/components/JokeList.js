@@ -23,21 +23,26 @@ class JokeList extends Component {
 	}
 
 	getJokes = async () => {
-		let jokes = []
-		while(jokes.length < this.props.jokesToGet){
-			const res = await fetch('https://icanhazdadjoke.com/', {headers: {Accept:'application/json'}})
-			const json = await res.json()
-			if(!this.seenJokes.has(json.id)){
-				jokes.push({id: json.id, text: json.joke, votes: 0});
-				this.seenJokes.add(json.id)
+		try{
+			let jokes = []
+			while(jokes.length < this.props.jokesToGet){
+				const res = await fetch('https://icanhazdadjoke.com/', {headers: {Accept:'application/json'}})
+				const json = await res.json()
+				if(!this.seenJokes.has(json.id)){
+					jokes.push({id: json.id, text: json.joke, votes: 0});
+					this.seenJokes.add(json.id)
+				}
 			}
-		}
-		this.setState(st => ({
-			jokes: [...st.jokes, ...jokes],
-			loading: false
-		}),
-		() => window.localStorage.setItem("jokes", JSON.stringify(this.state.jokes))
-		)
+			this.setState(st => ({
+				jokes: [...st.jokes, ...jokes],
+				loading: false
+			}),
+			() => window.localStorage.setItem("jokes", JSON.stringify(this.state.jokes))
+			)
+		} catch(e){
+			alert(e)
+			this.setState({loading: false})
+		}	
 	}
 
 	handleVote = (id, delta) => {
@@ -53,6 +58,7 @@ class JokeList extends Component {
 	}
 
 	render() {
+		let jokes = this.state.jokes.sort((a,b) => b.votes - a.votes)
 		return (
 			<div className='JokeList'>
 				<div className="JokeList-sidebar">
