@@ -58,13 +58,13 @@ class JokeList extends Component {
 	}
 
 	render() {
-		let jokes = this.state.jokes.sort((a,b) => b.votes - a.votes)
+		this.state.jokes.sort((a,b) => b.votes - a.votes)
 		return (
 			<div className='JokeList'>
 				<div className="JokeList-sidebar">
 					<h1 className='JokeList-title'>Dad Jokes</h1>
 					<img src='../man.svg' alt='dad logo'></img>
-					<button className="JokeList-getmore" onClick={this.handleClick}>New jokes</button>
+					<button className="JokeList-getMore" onClick={this.handleClick}>More jokes</button>
 				</div>
 				<div className="JokeList-jokes">
 					{!this.state.loading ? 
