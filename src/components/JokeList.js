@@ -13,6 +13,7 @@ class JokeList extends Component {
 			jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]"),
 			loading: false,
 		}
+		this.seenJokes = new Set(this.state.jokes.map(j => j.id))
 	}
 
 	componentDidMount() {
@@ -26,7 +27,10 @@ class JokeList extends Component {
 		while(jokes.length < this.props.jokesToGet){
 			const res = await fetch('https://icanhazdadjoke.com/', {headers: {Accept:'application/json'}})
 			const json = await res.json()
-			jokes.push({id: json.id, text: json.joke, votes: 0});
+			if(!this.seenJokes.has(json.id)){
+				jokes.push({id: json.id, text: json.joke, votes: 0});
+				this.seenJokes.add(json.id)
+			}
 		}
 		this.setState(st => ({
 			jokes: [...st.jokes, ...jokes],
@@ -46,7 +50,6 @@ class JokeList extends Component {
 
 	handleClick = () => {
 		this.setState({loading: true}, this.getJokes)
-		//this.getJokes()
 	}
 
 	render() {
