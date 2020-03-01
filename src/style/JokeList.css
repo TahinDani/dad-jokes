@@ -32,5 +32,6 @@
 	background: white;
 	align-self: center;
 	width: 70%;
-	overflow: scroll;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }

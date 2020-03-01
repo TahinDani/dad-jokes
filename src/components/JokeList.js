@@ -10,25 +10,41 @@ class JokeList extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			jokes: []
+			jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]")
 		}
 	}
 
-	async componentDidMount() {
+	componentDidMount() {
+		if(this.state.jokes.length === 0){
+			this.getJokes()
+		}
+	}
+
+	getJokes = async () => {
 		let jokes = []
 		while(jokes.length < this.props.jokesToGet){
 			const res = await fetch('https://icanhazdadjoke.com/', {headers: {Accept:'application/json'}})
 			const json = await res.json()
 			jokes.push({id: json.id, text: json.joke, votes: 0});
 		}
-		this.setState({jokes: jokes})
+		this.setState(st => ({
+			jokes: [...st.jokes, ...jokes]
+		}),
+		() => window.localStorage.setItem("jokes", JSON.stringify(this.state.jokes))
+		)
 	}
 
 	handleVote = (id, delta) => {
 		this.setState(st =>({
 			jokes: st.jokes.map(j => j.id === id ? {...j, votes: j.votes + delta} : j)
-		}))
-	} 
+		}),
+		() => window.localStorage.setItem("jokes", JSON.stringify(this.state.jokes))
+		)
+	}
+
+	handleClick = () => {
+		this.getJokes()
+	}
 
 	render() {
 		return (
@@ -36,7 +52,7 @@ class JokeList extends Component {
 				<div className="JokeList-sidebar">
 					<h1 className='JokeList-title'>Dad Jokes</h1>
 					<img src='../man.svg' alt='dad logo'></img>
-					<button className="JokeList-getmore">New jokes</button>
+					<button className="JokeList-getmore" onClick={this.handleClick}>New jokes</button>
 				</div>
 				<div className="JokeList-jokes">
 					{this.state.jokes.map(joke => 
