@@ -1,0 +1,9 @@
+.App{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	font-family: 'Rubik', sans-serif;
+	color: rgb(102, 102, 102);
+	background: linear-gradient(135deg, rgba(11,0,200,1) 0%, rgba(121,113,255,1) 50%, rgba(97,229,255,1) 50%, rgba(0,131,157,1) 100%);
+}

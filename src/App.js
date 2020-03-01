@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './style/App.css';
 import JokeList from './components/JokeList'
 
 function App() {
@@ -9,5 +9,5 @@ function App() {
 	</div>
   );
 }
-// test commit
+
 export default App;
